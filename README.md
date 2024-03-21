@@ -5,6 +5,11 @@
 
 <!-- badges: start -->
 
+[![CRAN
+status](https://www.r-pkg.org/badges/version/arcgeocoder)](https://CRAN.R-project.org/package=arcgeocoder)
+[![CRAN
+results](https://badges.cranchecks.info/worst/arcgeocoder.svg)](https://cran.r-project.org/web/checks/check_results_arcgeocoder.html)
+[![Downloads](https://cranlogs.r-pkg.org/badges/arcgeocoder)](https://CRAN.R-project.org/package=arcgeocoder)
 [![R-CMD-check](https://github.com/dieghernan/arcgeocoder/actions/workflows/check-full.yaml/badge.svg)](https://github.com/dieghernan/arcgeocoder/actions/workflows/check-full.yaml)
 [![codecov](https://codecov.io/gh/dieghernan/arcgeocoder/graph/badge.svg)](https://app.codecov.io/gh/dieghernan/arcgeocoder)
 [![r-universe](https://dieghernan.r-universe.dev/badges/arcgeocoder)](https://dieghernan.r-universe.dev/arcgeocoder)
@@ -13,6 +18,7 @@
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![DOI](https://img.shields.io/badge/DOI-10.5281/zenodo.10495365-blue)](https://doi.org/10.5281/zenodo.10495365)
+[![status](https://tinyverse.netlify.com/badge/arcgeocoder)](https://CRAN.R-project.org/package=arcgeocoder)
 
 <!-- badges: end -->
 
@@ -29,19 +35,20 @@ Full site with examples and vignettes on
 **arcgeocoder** is a package that provides a lightweight interface for
 geocoding and reverse geocoding with the ArcGIS REST API service. The
 goal of **arcgeocoder** is to access the ArcGIS REST API with fewer
-dependencies, such as `curl` . In some situations, `curl` may not be
+dependencies, such as **curl**. In some situations, **curl** may not be
 available or accessible, so **arcgeocoder** uses base functions to
 overcome this limitation.
 
 The interface of **apigeocoder** is built with the aim of easing the
 access to all the features provided by the API. The API endpoints used
 by **arcgeocoder** are `findAddressCandidates` and `reverseGeocode`,
-which can be accessed without the need for an API key.
+which can be accessed <u>**without**</u> the need for an <u>**API
+key**</u>.
 
 ## Recommended packages
 
 There are other packages much more complete and mature than
-`nominatimlite`, that presents similar features:
+**arcgeocoder**, that presents similar features:
 
 - [**tidygeocoder**](https://jessecambon.github.io/tidygeocoder/)
   ([Cambon et al. 2021](#ref-R-tidygeocoder)). Allows to interface with
@@ -54,7 +61,8 @@ There are other packages much more complete and mature than
 
 ## Installation
 
-Install **arcgeocoder** from **CRAN** (when approved) with:
+Install **arcgeocoder** from
+[**CRAN**](https://CRAN.R-project.org/package=arcgeocoder) with:
 
 ``` r
 install.packages("arcgeocoder")
@@ -63,7 +71,7 @@ install.packages("arcgeocoder")
 You can install the developing version of **arcgeocoder** with:
 
 ``` r
-devtools::install_github("dieghernan/arcgeocoder")
+remotes::install_github("dieghernan/arcgeocoder")
 ```
 
 Alternatively, you can install **arcgeocoder** using the
@@ -86,7 +94,8 @@ install.packages("arcgeocoder",
 *Note: examples adapted from **tidygeocoder** package*
 
 In this first example we will geocode a few addresses using the
-`arc_geo()` function:
+`arc_geo()` function. Note that **arcgeocoder** works straight away, and
+you don’t need to provide any API key to start geocoding!
 
 ``` r
 library(arcgeocoder)
@@ -175,7 +184,7 @@ food_eiffel <- arc_geo_categories("Food",
   limit = 50, full_results = TRUE
 )
 
-# Plot  by Food Type
+# Plot by Food Type
 ggplot(eiffel_tower, aes(x, y)) +
   geom_point(shape = 17, color = "red", size = 4) +
   geom_point(data = food_eiffel, aes(x, y, color = Type)) +
@@ -260,15 +269,16 @@ A BibTeX entry for LaTeX users is
       title = {{arcgeocoder}: Geocoding with the {ArcGIS} {REST} {API} Service},
       author = {Diego Hernangómez},
       year = {2024},
-      version = {0.1.0},
+      version = {0.2.0},
       doi = {10.5281/zenodo.10495365},
       url = {https://dieghernan.github.io/arcgeocoder/},
-      abstract = {Lite interface for finding locations of addresses or businesses around the world using the ArcGIS REST API service <https://developers.arcgis.com/rest/geocode/api-reference/overview-world-geocoding-service.htm>. Address text can be converted to location candidates and a location can be converted into an address.},
+      abstract = {Lite interface for finding locations of addresses or businesses around the world using the ArcGIS REST API service <https://developers.arcgis.com/rest/geocode/api-reference/overview-world-geocoding-service.htm>. Address text can be converted to location candidates and a location can be converted into an address. No API key required.},
     }
 
 ## References
 
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
 
 <div id="ref-R-tidygeocoder" class="csl-entry">
 

@@ -21,14 +21,15 @@ arc_geo_categories(
 }
 \arguments{
 \item{category}{A place or address type that can be used to filter results.
-Several values can be used as well as a comma-separated string (i.e.
-\verb{"Cinema,Museum}). See \link{arc_categories} for details.}
+Several values can be used as well as a vector (i.e.
+\code{c("Cinema", "Museum")}), performing one call for each value. See
+\strong{Details}.}
 
 \item{x}{longitude values in numeric format. Must be in the range
-\verb{[-180, 180]}.}
+\eqn{\left[-180, 180 \right]}.}
 
 \item{y}{latitude values in numeric format. Must be in the range
-\verb{[-90, 90]}.}
+\eqn{\left[-90, 90 \right]}.}
 
 \item{bbox}{A numeric vector of latitude and longitude
 \code{c(minX, minY, maxX, maxY)} that restrict the search area.
@@ -45,9 +46,9 @@ desired results.}
 that each query returns a maximum of 50 results.}
 
 \item{full_results}{returns all available data from the API service. This
-is a shorthand of \verb{outFields=*}. See \strong{References}.
-If \code{FALSE} (default) only the default values of the API would be returned.
-See also \code{return_addresses}.}
+is a shorthand of \verb{outFields=*}. See \strong{References}. If \code{FALSE} (default)
+only the default values of the API would be returned. See also
+\code{return_addresses} argument.}
 
 \item{verbose}{if \code{TRUE} then detailed logs are output to the console.}
 
@@ -69,20 +70,19 @@ returned.}
   }}
 }
 \value{
-A \CRANpkg{tibble} with the results. See the details of the output
-in \href{https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm}{ArcGIS REST API Service output}
+A \code{\link[tibble:tibble]{tibble}} object with the results. See the details of the output in  \href{https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm}{ArcGIS REST API Service output}.
 }
 \description{
 This function is useful for extracting places with a given category (or list
 of categories) near or within a given location or area. This is a wrapper
-of \code{\link[=arc_geo]{arc_geo()}}.
+of \code{\link[=arc_geo]{arc_geo()}}, but it is vectorized over \code{category}.
 
 See \link{arc_categories} for a detailed explanation and available values.
 
 \strong{Note that} for obtaining results it is needed:
 \itemize{
 \item Either to provide a pair of coordinates (\verb{x,y} parameters) that would be
-used as a reference for geocoding,
+used as a reference for geocoding.
 \item Or a viewbox (aka bounding box) on the \code{bbox} parameter defining an
 desired extent of the results.
 }
@@ -95,6 +95,13 @@ Bounding boxes can be located using different online tools, as
 \href{https://boundingbox.klokantech.com/}{Bounding Box Tool}.
 
 For a full list of valid categories see \link{arc_categories}.
+
+This function is vectorized over \code{category}, that means that it would perform
+one independent call to \code{\link[=arc_geo]{arc_geo()}} for each \code{category} value.
+
+\code{arc_geo_categories()} also understands a single string of categories
+separated by commas (\code{"Cinema,Museum"}), that would be internally treated as
+\code{c("Cinema", "Museum")}.
 }
 \section{\code{outsr}}{
 The spatial reference can be specified as either a well-known ID (WKID). If
@@ -112,6 +119,21 @@ See \link{arc_spatial_references} for values and examples.
 # Get Carabanchel
 carab <- arc_geo("Carabanchel, Madrid, Spain")
 
+# CRS
+carab_crs <- unique(carab$latestWkid)
+
+
+library(ggplot2)
+
+base_map <- ggplot(carab) +
+  geom_point(aes(lon, lat), size = 5, color = "red") +
+  geom_rect(aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
+    fill = NA,
+    color = "blue"
+  ) +
+  coord_sf(crs = carab_crs)
+
+
 # Ex1: Search near Carabanchel (not restricted)
 ex1 <- arc_geo_categories("Gas Station",
   # Location
@@ -119,23 +141,24 @@ ex1 <- arc_geo_categories("Gas Station",
   limit = 50, full_results = TRUE
 )
 
-plot(carab$lon, carab$lat,
-  col = "red", pch = 19, cex = 3,
-  xlim = c(-3.8, -3.65), ylim = c(40.3, 40.5),
-  xlab = "long", ylab = "lat", main = "Example 1: Search near"
-)
 
-# BBox of Carabanchel
-rect(carab$xmin, carab$ymin, carab$xmax, carab$ymax,
-  border = "blue",
-  col = NULL
-)
-# Points may be far away
-points(ex1$lon, ex1$lat)
+# Reduce number of labels to most common ones
+library(dplyr)
 
+labs <- ex1 \%>\%
+  count(ShortLabel) \%>\%
+  slice_max(n = 7, order_by = n) \%>\%
+  pull(ShortLabel)
+
+base_map +
+  geom_point(data = ex1, aes(lon, lat, color = ShortLabel)) +
+  scale_color_discrete(breaks = labs) +
+  labs(
+    title = "Example 1",
+    subtitle = "Search near (points may be far away)"
+  )
 
 # Example 2: Include part of the name, different results
-
 ex2 <- arc_geo_categories("Gas Station",
   # Name
   name = "Repsol",
@@ -144,42 +167,26 @@ ex2 <- arc_geo_categories("Gas Station",
   limit = 50, full_results = TRUE
 )
 
-
-plot(carab$lon, carab$lat,
-  col = "red", pch = 19, cex = 3,
-  xlim = c(-3.8, -3.65), ylim = c(40.3, 40.5),
-  xlab = "long", ylab = "lat", main = "Example 2: Search near with name"
-)
-# BBox of Carabanchel
-rect(carab$xmin, carab$ymin, carab$xmax, carab$ymax,
-  border = "blue",
-  col = NULL
-)
-# Points may be far away
-points(ex2$lon, ex2$lat)
+base_map +
+  geom_point(data = ex2, aes(lon, lat, color = ShortLabel)) +
+  labs(
+    title = "Example 2",
+    subtitle = "Search near with name"
+  )
 
 # Example 3: Near within a extent
-
 ex3 <- arc_geo_categories("Gas Station",
   name = "Repsol",
   bbox = c(carab$xmin, carab$ymin, carab$xmax, carab$ymax),
   limit = 50, full_results = TRUE
 )
 
-
-plot(carab$lon, carab$lat,
-  col = "red", pch = 19, cex = 3,
-  xlim = c(-3.8, -3.65), ylim = c(40.3, 40.5),
-  xlab = "long", ylab = "lat",
-  main = "Example 3: Search near with name and bbox"
-)
-# BBox of Carabanchel
-rect(carab$xmin, carab$ymin, carab$xmax, carab$ymax,
-  border = "blue",
-  col = NULL
-)
-# Points may be far away
-points(ex3$lon, ex3$lat)
+base_map +
+  geom_point(data = ex3, aes(lon, lat, color = ShortLabel)) +
+  labs(
+    title = "Example 3",
+    subtitle = "Search near with name and bbox"
+  )
 }
 \dontshow{\}) # examplesIf}
 }
@@ -188,9 +195,9 @@ points(ex3$lon, ex3$lat)
 
 \link{arc_categories}
 
-Geocoding operations: 
-\code{\link{arc_geo_multi}()},
+Other functions for geocoding: 
 \code{\link{arc_geo}()},
+\code{\link{arc_geo_multi}()},
 \code{\link{arc_reverse_geo}()}
 }
 \concept{geocoding}
