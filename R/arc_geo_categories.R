@@ -192,7 +192,7 @@ arc_geo_categories <- function(category, x = NULL, y = NULL, bbox = NULL,
     # Remove fields
     end <- end[, setdiff(names(end), "query")]
 
-    return(end)
+    end
   })
 
   dplyr::bind_rows(api_res)
@@ -237,7 +237,7 @@ validate_location <- function(x = NULL, y = NULL) {
     message("\nlongitudes have been restricted to [-180, 180]")
   }
 
-  return(c(x_cap, y_cap))
+  c(x_cap, y_cap)
 }
 
 validate_bbox <- function(bbox = NULL) {
@@ -281,5 +281,5 @@ validate_bbox <- function(bbox = NULL) {
     message("\nbbox ymin,ymax have been restricted to [-90, 90]")
   }
 
-  return(c(xs_cap[1], ys_cap[1], xs_cap[2], ys_cap[2]))
+  c(xs_cap[1], ys_cap[1], xs_cap[2], ys_cap[2])
 }

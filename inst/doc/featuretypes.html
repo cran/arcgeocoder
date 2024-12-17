@@ -359,9 +359,9 @@ the tolerance specified in the <em>Search Tolerance</em> column.</p>
 <caption><strong>Table 1</strong>: Adapted from ArcGIS REST API
 <code>reverseGeocode</code></caption>
 <colgroup>
-<col width="22%" />
-<col width="22%" />
-<col width="55%" />
+<col width="26%" />
+<col width="7%" />
+<col width="65%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -473,8 +473,8 @@ features, but a match to the <code>POI</code> centroid is returned
 because it has a higher priority (see <a href="#table1"><strong>Table
 1</strong></a>). Note that the output field <code>Addr_type</code>
 indicates the type of feature.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>example_x <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fl">117.205525</span></span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>example_y <span class="ot">&lt;-</span> <span class="fl">34.038232</span></span>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>example_x <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fl">117.203741</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>example_y <span class="ot">&lt;-</span> <span class="fl">40.95029</span></span>
 <span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>api_poi <span class="ot">&lt;-</span> <span class="fu">arc_reverse_geo</span>(</span>
 <span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="at">x =</span> example_x, <span class="at">y =</span> example_y,</span>
@@ -486,56 +486,11 @@ indicates the type of feature.</p>
 <span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div>
 <table style="width:100%;">
 <colgroup>
-<col width="8%" />
-<col width="7%" />
-<col width="58%" />
-<col width="8%" />
-<col width="7%" />
-<col width="8%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="right">x</th>
-<th align="right">y</th>
-<th align="left">address</th>
-<th align="right">lon</th>
-<th align="right">lat</th>
-<th align="left">Addr_type</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="right">-117.2055</td>
-<td align="right">34.03823</td>
-<td align="left">InlandPsych, 255 Terracina Blvd, Ste 204, Redlands, CA,
-92373, USA</td>
-<td align="right">-117.2055</td>
-<td align="right">34.03823</td>
-<td align="left">POI</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="example-2-match-to-streetaddress-match-returned" class="section level3">
-<h3>Example 2: Match to <code>StreetAddress</code> match returned</h3>
-<p>We specify here the type of feature we want to get using
-<code>featuretypes = &quot;StreetAddress&quot;</code>.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>api_address <span class="ot">&lt;-</span> <span class="fu">arc_reverse_geo</span>(</span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="at">x =</span> example_x, <span class="at">y =</span> example_y,</span>
-<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="at">featuretypes =</span> <span class="st">&quot;StreetAddress&quot;</span>,</span>
-<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="at">langcode =</span> <span class="st">&quot;EN&quot;</span>, <span class="at">full_results =</span> <span class="cn">TRUE</span>, <span class="at">verbose =</span> <span class="cn">TRUE</span></span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>)</span>
-<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>api_address <span class="sc">%&gt;%</span></span>
-<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>  <span class="fu">select</span>(x, y, address, lon, lat, Addr_type) <span class="sc">%&gt;%</span></span>
-<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div>
-<table style="width:100%;">
-<colgroup>
-<col width="9%" />
-<col width="8%" />
-<col width="48%" />
-<col width="9%" />
-<col width="8%" />
+<col width="13%" />
+<col width="12%" />
+<col width="34%" />
+<col width="13%" />
+<col width="12%" />
 <col width="13%" />
 </colgroup>
 <thead>
@@ -550,35 +505,35 @@ indicates the type of feature.</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">-117.2055</td>
-<td align="right">34.03823</td>
-<td align="left">251-255 Terracina Blvd, Redlands, CA, 92373, USA</td>
-<td align="right">-117.2057</td>
-<td align="right">34.03799</td>
-<td align="left">StreetAddress</td>
+<td align="right">-117.2037</td>
+<td align="right">40.95029</td>
+<td align="left">89414, Golconda, NV, USA</td>
+<td align="right">-117.2037</td>
+<td align="right">40.95029</td>
+<td align="left">Postal</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="example-3-locality-match-returned" class="section level3">
-<h3>Example 3: <code>Locality</code> match returned</h3>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>api_local <span class="ot">&lt;-</span> <span class="fu">arc_reverse_geo</span>(</span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="at">x =</span> example_x, <span class="at">y =</span> example_y,</span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="at">featuretypes =</span> <span class="st">&quot;Locality&quot;</span>,</span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="at">langcode =</span> <span class="st">&quot;EN&quot;</span>, <span class="at">full_results =</span> <span class="cn">TRUE</span>, <span class="at">verbose =</span> <span class="cn">TRUE</span></span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>)</span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>api_local <span class="sc">%&gt;%</span></span>
-<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>  <span class="fu">select</span>(x, y, address, lon, lat, Addr_type) <span class="sc">%&gt;%</span></span>
-<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div>
+<div id="example-2-locality-match-returned" class="section level3">
+<h3>Example 2: <code>Locality</code> match returned</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>api_local <span class="ot">&lt;-</span> <span class="fu">arc_reverse_geo</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="at">x =</span> example_x, <span class="at">y =</span> example_y,</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="at">featuretypes =</span> <span class="st">&quot;Locality&quot;</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="at">langcode =</span> <span class="st">&quot;EN&quot;</span>, <span class="at">full_results =</span> <span class="cn">TRUE</span>, <span class="at">verbose =</span> <span class="cn">TRUE</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>)</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>api_local <span class="sc">%&gt;%</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>  <span class="fu">select</span>(x, y, address, lon, lat, Addr_type) <span class="sc">%&gt;%</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div>
 <table style="width:100%;">
 <colgroup>
+<col width="13%" />
 <col width="12%" />
-<col width="10%" />
-<col width="41%" />
+<col width="34%" />
+<col width="13%" />
 <col width="12%" />
-<col width="10%" />
-<col width="12%" />
+<col width="13%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -592,37 +547,37 @@ indicates the type of feature.</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">-117.2055</td>
-<td align="right">34.03823</td>
-<td align="left">South Redlands, Redlands, CA, USA</td>
-<td align="right">-117.2055</td>
-<td align="right">34.03823</td>
+<td align="right">-117.2037</td>
+<td align="right">40.95029</td>
+<td align="left">Humboldt County, NV, USA</td>
+<td align="right">-117.2037</td>
+<td align="right">40.95029</td>
 <td align="left">Locality</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="example-4-multiple-values" class="section level3">
-<h3>Example 4: multiple values</h3>
+<div id="example-3-multiple-values" class="section level3">
+<h3>Example 3: multiple values</h3>
 <p>When multiple values are included in the API call, the hierarchy
 explained in <a href="#table1"><strong>Table 1</strong></a> would still
 be applied on the requested <code>featuretypes</code>.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>api_multiple <span class="ot">&lt;-</span> <span class="fu">arc_reverse_geo</span>(</span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="at">x =</span> example_x, <span class="at">y =</span> example_y,</span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="at">featuretypes =</span> <span class="fu">c</span>(<span class="st">&quot;Locality&quot;</span>, <span class="st">&quot;StreetInt&quot;</span>, <span class="st">&quot;StreetAddress&quot;</span>),</span>
-<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="at">langcode =</span> <span class="st">&quot;EN&quot;</span>, <span class="at">full_results =</span> <span class="cn">TRUE</span>, <span class="at">verbose =</span> <span class="cn">TRUE</span></span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>)</span>
-<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>api_multiple <span class="sc">%&gt;%</span></span>
-<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>  <span class="fu">select</span>(x, y, address, lon, lat, Addr_type) <span class="sc">%&gt;%</span></span>
-<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>api_multiple <span class="ot">&lt;-</span> <span class="fu">arc_reverse_geo</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="at">x =</span> example_x, <span class="at">y =</span> example_y,</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="at">featuretypes =</span> <span class="fu">c</span>(<span class="st">&quot;Locality&quot;</span>, <span class="st">&quot;StreetInt&quot;</span>, <span class="st">&quot;StreetAddress&quot;</span>),</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="at">langcode =</span> <span class="st">&quot;EN&quot;</span>, <span class="at">full_results =</span> <span class="cn">TRUE</span>, <span class="at">verbose =</span> <span class="cn">TRUE</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>)</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>api_multiple <span class="sc">%&gt;%</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>  <span class="fu">select</span>(x, y, address, lon, lat, Addr_type) <span class="sc">%&gt;%</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div>
 <table style="width:100%;">
 <colgroup>
-<col width="9%" />
-<col width="8%" />
-<col width="48%" />
-<col width="9%" />
-<col width="8%" />
+<col width="13%" />
+<col width="12%" />
+<col width="34%" />
+<col width="13%" />
+<col width="12%" />
 <col width="13%" />
 </colgroup>
 <thead>
@@ -637,18 +592,18 @@ be applied on the requested <code>featuretypes</code>.</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">-117.2055</td>
-<td align="right">34.03823</td>
-<td align="left">251-255 Terracina Blvd, Redlands, CA, 92373, USA</td>
-<td align="right">-117.2057</td>
-<td align="right">34.03799</td>
-<td align="left">StreetAddress</td>
+<td align="right">-117.2037</td>
+<td align="right">40.95029</td>
+<td align="left">Humboldt County, NV, USA</td>
+<td align="right">-117.2037</td>
+<td align="right">40.95029</td>
+<td align="left">Locality</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="example-5-no-results-for-specific-featuretypes" class="section level3">
-<h3>Example 5: No results for specific <code>featuretypes</code></h3>
+<div id="example-4-no-results-for-specific-featuretypes" class="section level3">
+<h3>Example 4: No results for specific <code>featuretypes</code></h3>
 <p>In the following example we present a case where only certain
 <code>featuretypes</code> are near the requested location. In this case,
 when reverse geocoding the North Pole the API would return a
@@ -656,13 +611,13 @@ when reverse geocoding the North Pole the API would return a
 <p>When it is not possible to return results,
 <code>arc_reverse_geo()</code> returns an empty
 <strong>tibble</strong>.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># North Pole</span></span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>npole <span class="ot">&lt;-</span> <span class="fu">arc_reverse_geo</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">90</span>, <span class="at">langcode =</span> <span class="st">&quot;EN&quot;</span>, <span class="at">full_results =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>npole <span class="sc">%&gt;%</span></span>
-<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>  <span class="fu">select</span>(x, y, address, lon, lat, Addr_type) <span class="sc">%&gt;%</span></span>
-<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># North Pole</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>npole <span class="ot">&lt;-</span> <span class="fu">arc_reverse_geo</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">90</span>, <span class="at">langcode =</span> <span class="st">&quot;EN&quot;</span>, <span class="at">full_results =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>npole <span class="sc">%&gt;%</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="fu">select</span>(x, y, address, lon, lat, Addr_type) <span class="sc">%&gt;%</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -678,21 +633,21 @@ when reverse geocoding the North Pole the API would return a
 <tr class="odd">
 <td align="right">0</td>
 <td align="right">90</td>
-<td align="left">North Pole</td>
+<td align="left">Ozero Shybyndy</td>
 <td align="right">0</td>
 <td align="right">90</td>
-<td align="left">Locality</td>
+<td align="left">POI</td>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="co"># But no StreetAddress</span></span>
-<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>npole2 <span class="ot">&lt;-</span> <span class="fu">arc_reverse_geo</span>(</span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  <span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">90</span>, <span class="at">langcode =</span> <span class="st">&quot;EN&quot;</span>, <span class="at">full_results =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  <span class="at">featuretypes =</span> <span class="st">&quot;StreetAddress&quot;</span></span>
-<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>)</span>
-<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>npole2 <span class="sc">%&gt;%</span></span>
-<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># But no StreetAddress</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>npole2 <span class="ot">&lt;-</span> <span class="fu">arc_reverse_geo</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">90</span>, <span class="at">langcode =</span> <span class="st">&quot;EN&quot;</span>, <span class="at">full_results =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  <span class="at">featuretypes =</span> <span class="st">&quot;StreetAddress&quot;</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>)</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>npole2 <span class="sc">%&gt;%</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
