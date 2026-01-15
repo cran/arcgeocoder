@@ -1,6 +1,6 @@
 Package: arcgeocoder
 Title: Geocoding with the 'ArcGIS' REST API Service
-Version: 0.2.1
+Version: 0.3.0
 Authors@R: 
     person("Diego", "Hernangómez", , "diego.hernangomezherrero@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-8457-4658"))
@@ -13,7 +13,7 @@ License: MIT + file LICENSE
 URL: https://dieghernan.github.io/arcgeocoder/,
         https://github.com/dieghernan/arcgeocoder
 BugReports: https://github.com/dieghernan/arcgeocoder/issues
-Depends: R (>= 3.6.0)
+Depends: R (>= 4.1.0)
 Imports: dplyr (>= 1.0.0), jsonlite (>= 1.7.0)
 Suggests: ggplot2, knitr, rmarkdown, sf, testthat (>= 3.0.0), tibble,
         tidygeocoder
@@ -25,15 +25,15 @@ Config/testthat/edition: 3
 Config/testthat/parallel: true
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 X-schema.org-applicationCategory: cartography
 X-schema.org-keywords: r, geocoding, arcgis, address,
         reverse-geocoding, rstats, r-package, api-wrapper, api-rest,
         arcgis-api, cran-r, gis, cran
 NeedsCompilation: no
-Packaged: 2024-12-17 10:38:16 UTC; diego
-Author: Diego Hernangómez [aut, cre, cph]
-    (<https://orcid.org/0000-0001-8457-4658>)
+Packaged: 2026-01-15 12:50:55 UTC; diego
+Author: Diego Hernangómez [aut, cre, cph] (ORCID:
+    <https://orcid.org/0000-0001-8457-4658>)
 Maintainer: Diego Hernangómez <diego.hernangomezherrero@gmail.com>
 Repository: CRAN
-Date/Publication: 2024-12-17 10:50:01 UTC
+Date/Publication: 2026-01-15 13:00:07 UTC

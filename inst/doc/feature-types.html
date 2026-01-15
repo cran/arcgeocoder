@@ -48,8 +48,9 @@ overflow: visible;
 }
 </style>
 <style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -60,7 +61,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -340,6 +341,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
+<!-- feature-types.Rmd is generated from feature-types.Rmd.orig. Please edit that file -->
 <p><em>Adapted from <a href="https://developers.arcgis.com/rest/geocode/api-reference/geocoding-reverse-geocode.htm" class="uri">https://developers.arcgis.com/rest/geocode/api-reference/geocoding-reverse-geocode.htm</a></em></p>
 <div id="reverse-geocode-details" class="section level2">
 <h2>Reverse geocode details</h2>
@@ -359,9 +361,9 @@ the tolerance specified in the <em>Search Tolerance</em> column.</p>
 <caption><strong>Table 1</strong>: Adapted from ArcGIS REST API
 <code>reverseGeocode</code></caption>
 <colgroup>
-<col width="26%" />
-<col width="7%" />
-<col width="65%" />
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -428,13 +430,13 @@ with the smallest area is returned.</td>
 </table>
 <p>In <strong>arcgeocoder</strong>, this hierarchy is implemented in
 <code>arc_reverse_geo()</code>, specifically through the
-<code>featuretypes</code> parameter. The default value
-(<code>featuretypes = NULL</code>) does not include the parameter in the
+<code>featuretypes</code> argument. The default value
+(<code>featuretypes = NULL</code>) does not include the argument in the
 API call. In this case, the hierarchy presented in the previous table
 would apply.</p>
 <p>It is possible to narrow down the output of the query to a specific
-feature type or a list of feature types.The possible values supported
-for this parameter are:</p>
+feature type or a list of feature types. The possible values supported
+for this argument are:</p>
 <ul>
 <li><code>&quot;StreetInt&quot;</code></li>
 <li><code>&quot;DistanceMarker&quot;</code></li>
@@ -447,7 +449,7 @@ for this parameter are:</p>
 <li><code>&quot;Locality&quot;</code></li>
 </ul>
 <p>As mentioned, is to possible to include several feature types. If
-more than one value is specified for the parameter, the values must be
+more than one value is specified for the argument, the values must be
 separated by a comma, with no spaces after the comma.</p>
 <div id="single-featuretypes-value" class="section level3">
 <h3>single <code>featuretypes</code> value</h3>
@@ -467,7 +469,7 @@ better understanding.</p>
 <div id="example-1-match-to-poi-centroid-returned" class="section level3">
 <h3>Example 1: Match to <code>POI</code> centroid returned</h3>
 <p>In this example, we do not provide any value to the
-<code>featuretypes</code> parameter. This input location is within the
+<code>featuretypes</code> argument. This input location is within the
 search tolerance of both <code>POI</code> and <code>PointAddress</code>
 features, but a match to the <code>POI</code> centroid is returned
 because it has a higher priority (see <a href="#table1"><strong>Table
@@ -481,14 +483,14 @@ indicates the type of feature.</p>
 <span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  <span class="at">langcode =</span> <span class="st">&quot;EN&quot;</span>, <span class="at">full_results =</span> <span class="cn">TRUE</span>, <span class="at">verbose =</span> <span class="cn">TRUE</span></span>
 <span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>)</span>
 <span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a></span>
-<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>api_poi <span class="sc">%&gt;%</span></span>
-<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>  <span class="fu">select</span>(x, y, address, lon, lat, Addr_type) <span class="sc">%&gt;%</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>api_poi <span class="sc">|&gt;</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>  <span class="fu">select</span>(x, y, address, lon, lat, Addr_type) <span class="sc">|&gt;</span></span>
 <span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div>
 <table style="width:100%;">
 <colgroup>
 <col width="13%" />
 <col width="12%" />
-<col width="34%" />
+<col width="32%" />
 <col width="13%" />
 <col width="12%" />
 <col width="13%" />
@@ -523,14 +525,14 @@ indicates the type of feature.</p>
 <span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="at">langcode =</span> <span class="st">&quot;EN&quot;</span>, <span class="at">full_results =</span> <span class="cn">TRUE</span>, <span class="at">verbose =</span> <span class="cn">TRUE</span></span>
 <span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>)</span>
 <span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>api_local <span class="sc">%&gt;%</span></span>
-<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>  <span class="fu">select</span>(x, y, address, lon, lat, Addr_type) <span class="sc">%&gt;%</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>api_local <span class="sc">|&gt;</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>  <span class="fu">select</span>(x, y, address, lon, lat, Addr_type) <span class="sc">|&gt;</span></span>
 <span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div>
 <table style="width:100%;">
 <colgroup>
 <col width="13%" />
 <col width="12%" />
-<col width="34%" />
+<col width="32%" />
 <col width="13%" />
 <col width="12%" />
 <col width="13%" />
@@ -568,14 +570,14 @@ be applied on the requested <code>featuretypes</code>.</p>
 <span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="at">langcode =</span> <span class="st">&quot;EN&quot;</span>, <span class="at">full_results =</span> <span class="cn">TRUE</span>, <span class="at">verbose =</span> <span class="cn">TRUE</span></span>
 <span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>)</span>
 <span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>api_multiple <span class="sc">%&gt;%</span></span>
-<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>  <span class="fu">select</span>(x, y, address, lon, lat, Addr_type) <span class="sc">%&gt;%</span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>api_multiple <span class="sc">|&gt;</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>  <span class="fu">select</span>(x, y, address, lon, lat, Addr_type) <span class="sc">|&gt;</span></span>
 <span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div>
 <table style="width:100%;">
 <colgroup>
 <col width="13%" />
 <col width="12%" />
-<col width="34%" />
+<col width="32%" />
 <col width="13%" />
 <col width="12%" />
 <col width="13%" />
@@ -615,8 +617,8 @@ when reverse geocoding the North Pole the API would return a
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>npole <span class="ot">&lt;-</span> <span class="fu">arc_reverse_geo</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">90</span>, <span class="at">langcode =</span> <span class="st">&quot;EN&quot;</span>, <span class="at">full_results =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>npole <span class="sc">%&gt;%</span></span>
-<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="fu">select</span>(x, y, address, lon, lat, Addr_type) <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>npole <span class="sc">|&gt;</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="fu">select</span>(x, y, address, lon, lat, Addr_type) <span class="sc">|&gt;</span></span>
 <span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div>
 <table>
 <thead>
@@ -646,7 +648,7 @@ when reverse geocoding the North Pole the API would return a
 <span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  <span class="at">featuretypes =</span> <span class="st">&quot;StreetAddress&quot;</span></span>
 <span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>)</span>
 <span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>npole2 <span class="sc">%&gt;%</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>npole2 <span class="sc">|&gt;</span></span>
 <span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code></pre></div>
 <table>
 <thead>
@@ -673,7 +675,7 @@ values depending on the value of <code>featuretypes</code>. By using
 <code>featuretypes = NULL</code> the feature type returned would depend
 on the hierarchy explained in <a href="#table1"><strong>Table
 1</strong></a>.</p>
-<p>Depending on the location, the <code>featuretype</code> filter may
+<p>Depending on the location, the <code>featuretypes</code> filter may
 not return results, hence for general purposes using
 <code>featuretypes = NULL</code> is safer.</p>
 </div>

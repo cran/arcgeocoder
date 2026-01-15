@@ -44,7 +44,7 @@ that each query returns a maximum of 50 results.}
 
 \item{full_results}{returns all available data from the API service. This
 is a shorthand of \verb{outFields=*}. See \strong{References}. If \code{FALSE} (default)
-only the default values of the API would be returned. See also
+only the default values of the API are returned. See also
 \code{return_addresses} argument.}
 
 \item{return_addresses}{return input addresses with results if \code{TRUE}.}
@@ -55,7 +55,7 @@ only the default values of the API would be returned. See also
 the progress of the function.}
 
 \item{outsr}{The spatial reference of the \verb{x,y} coordinates returned by a
-geocode request. By default is \code{NULL} (i.e. the parameter won't be used in
+geocode request. By default is \code{NULL} (i.e. the argument won't be used in
 the query). See \strong{Details} and \link{arc_spatial_references}.}
 
 \item{langcode}{Sets the language in which reverse-geocoded addresses are
@@ -65,18 +65,18 @@ returned.}
 Several values can be used as well as a vector (i.e.
 \code{c("Cinema", "Museum")}). See \link{arc_categories} for details.}
 
-\item{custom_query}{API-specific parameters to be used, passed as a named
+\item{custom_query}{API-specific arguments to be used, passed as a named
 list.}
 }
 \value{
-A \code{\link[tibble:tibble]{tibble}} object with the results. See the details of the output in  \href{https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm}{ArcGIS REST API Service output}.
+A \link[tibble:tbl_df-class]{tibble} object with the results. See the details of the output in  \href{https://developers.arcgis.com/rest/geocode/api-reference/geocoding-service-output.htm}{ArcGIS REST API Service output}.
 
-The resulting output would include also the input parameters (columns with
+The resulting output will include also the input arguments (columns with
 prefix \code{q_}) for better tracking the results.
 }
 \description{
-Geocodes addresses given specific address components.This function returns
-the \code{\link[tibble:tibble]{tibble}} associated with the query.
+Geocodes addresses given specific address components. This function returns
+the \link[tibble:tbl_df-class]{tibble} associated with the query.
 
 For geocoding using a single text string use \code{\link[=arc_geo]{arc_geo()}} function.
 }
@@ -84,14 +84,14 @@ For geocoding using a single text string use \code{\link[=arc_geo]{arc_geo()}} f
 More info and valid values in the \href{https://developers.arcgis.com/rest/geocode/api-reference/geocoding-find-address-candidates.htm}{ArcGIS REST docs}.
 }
 \section{Address components}{
-This function allows to perform structured queries by different components of
+This function allows performing structured queries by different components of
 an address. At least one field should be different than \code{NA} or \code{NULL}.
 
-A vector of values can be provided for each parameter for multiple geocoding.
-When using vectors on different parameters, their lengths should be the
+A vector of values can be provided for each argument for multiple geocoding.
+When using vectors on different arguments, their lengths should be the
 same.
 
-The following list provides a brief description of each parameter:
+The following list provides a brief description of each argument:
 \itemize{
 \item \code{address}: A string that represents the first line of a street address. In
 most cases it will be the \strong{street name and house number} input, but it
@@ -126,13 +126,13 @@ country code, or the three-character country code.
 \section{\code{outsr}}{
 The spatial reference can be specified as either a well-known ID (WKID). If
 not specified, the spatial reference of the output locations is the same as
-that of the service ( WGS84, i.e. WKID = 4326)).
+that of the service (WGS84, i.e. WKID = 4326)).
 
 See \link{arc_spatial_references} for values and examples.
 }
 
 \examples{
-\dontshow{if (arcgeocoder_check_access()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (arcgeocoder_check_access()) withAutoprint(\{ # examplesIf}
 \donttest{
 simple <- arc_geo_multi(
   address = "Plaza Mayor", limit = 10,
@@ -141,8 +141,8 @@ simple <- arc_geo_multi(
 
 library(dplyr)
 
-simple \%>\%
-  select(lat, lon, CntryName, Region, LongLabel) \%>\%
+simple |>
+  select(lat, lon, CntryName, Region, LongLabel) |>
   slice_head(n = 10)
 
 # Restrict search to Spain
@@ -152,8 +152,8 @@ simple2 <- arc_geo_multi(
   custom_query = list(outFields = c("LongLabel", "CntryName", "Region"))
 )
 
-simple2 \%>\%
-  select(lat, lon, CntryName, Region, LongLabel) \%>\%
+simple2 |>
+  select(lat, lon, CntryName, Region, LongLabel) |>
   slice_head(n = 10)
 
 # Restrict to a region
@@ -164,8 +164,8 @@ simple3 <- arc_geo_multi(
   custom_query = list(outFields = c("LongLabel", "CntryName", "Region"))
 )
 
-simple3 \%>\%
-  select(lat, lon, CntryName, Region, LongLabel) \%>\%
+simple3 |>
+  select(lat, lon, CntryName, Region, LongLabel) |>
   slice_head(n = 10)
 }
 \dontshow{\}) # examplesIf}
@@ -176,7 +176,7 @@ simple3 \%>\%
 \seealso{
 \code{\link[tidygeocoder:geo]{tidygeocoder::geo()}}
 
-Other functions for geocoding: 
+Other functions for geocoding:
 \code{\link{arc_geo}()},
 \code{\link{arc_geo_categories}()},
 \code{\link{arc_reverse_geo}()}

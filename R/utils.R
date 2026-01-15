@@ -7,7 +7,6 @@ add_custom_query <- function(custom_query = list(), url) {
   # Collapse
   custom_query <- lapply(custom_query, paste0, collapse = ",")
 
-
   opts <- paste0(names(custom_query), "=", custom_query, collapse = "&")
 
   end_url <- paste0(url, "&", opts)
@@ -30,11 +29,11 @@ is_named <- function(x) {
 # Specific ----
 unnest_reverse <- function(x) {
   x_add <- x$address
-  lngths <- vapply(x_add, length, FUN.VALUE = numeric(1))
+  lngths <- lengths(x_add)
   endobj <- dplyr::as_tibble(x_add[lngths == 1])
 
   x_loc <- x$location
-  lngths_loc <- vapply(x_loc, length, FUN.VALUE = numeric(1))
+  lngths_loc <- lengths(x_loc)
   endobj_loc <- dplyr::as_tibble(x_loc[lngths_loc == 1])
   names(endobj_loc) <- c("lon", "lat")
 
@@ -62,9 +61,9 @@ unnest_geo <- function(x) {
 
   maybe_df <- vapply(x_cand, is.data.frame, FUN.VALUE = logical(1))
   # Extract first those that are not
-  endobj <- dplyr::as_tibble(x_cand[maybe_df == FALSE])
+  endobj <- dplyr::as_tibble(x_cand[!maybe_df])
 
-  unnes <- maybe_df[maybe_df == TRUE]
+  unnes <- maybe_df[maybe_df]
 
   df_list <- lapply(names(unnes), function(y) {
     x_cand[, y]
@@ -73,23 +72,26 @@ unnest_geo <- function(x) {
   unnested <- dplyr::bind_cols(df_list)
   endobj <- dplyr::bind_cols(endobj, unnested)
 
-
   if ("spatialReference" %in% names(x)) {
     bb <- dplyr::as_tibble(x$spatialReference)
     endobj <- dplyr::bind_cols(endobj, bb)
   }
 
-
   endobj
 }
 
-keep_names_rev <- function(x, address = "address",
-                           full_results = FALSE,
-                           colstokeep = address) {
-  names(x) <- gsub("address", address, names(x))
+keep_names_rev <- function(
+  x,
+  address = "address",
+  full_results = FALSE,
+  colstokeep = address
+) {
+  names(x) <- gsub("address", address, names(x), fixed = TRUE)
 
   out_cols <- colstokeep
-  if (full_results) out_cols <- c(out_cols, "lat", "lon", names(x))
+  if (full_results) {
+    out_cols <- c(out_cols, "lat", "lon", names(x))
+  }
 
   out_cols <- unique(out_cols)
   out <- x[, out_cols]
@@ -97,18 +99,26 @@ keep_names_rev <- function(x, address = "address",
   out
 }
 
-keep_names <- function(x, lat = "lat", lon = "lon",
-                       full_results = TRUE,
-                       return_addresses = TRUE,
-                       colstokeep = c("query", lat, lon)) {
+keep_names <- function(
+  x,
+  lat = "lat",
+  lon = "lon",
+  full_results = TRUE,
+  return_addresses = TRUE,
+  colstokeep = c("query", lat, lon)
+) {
   names(x) <- gsub("^lon$", lon, names(x))
   names(x) <- gsub("^lat$", lat, names(x))
 
   out_cols <- colstokeep
   out_cols <- c(out_cols, names(x))
 
-  if (!return_addresses) out_cols <- colstokeep
-  if (full_results) out_cols <- c(out_cols, names(x))
+  if (!return_addresses) {
+    out_cols <- colstokeep
+  }
+  if (full_results) {
+    out_cols <- c(out_cols, names(x))
+  }
 
   out_cols <- unique(out_cols)
   out <- x[, out_cols]

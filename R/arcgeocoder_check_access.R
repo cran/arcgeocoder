@@ -71,15 +71,19 @@ skip_if_api_server <- function() {
 #'
 #' @keywords internal
 #'
+#' @noRd
 arc_api_call <- function(url, destfile, quiet) {
   if (!quiet) {
     decomp <- unlist(strsplit(url, "?", fixed = TRUE))
     params <- unlist(strsplit(decomp[2], "&"))
     url <- URLencode(url)
     message(
-      "\nEntry point: ", decomp[1], "?\nParameters:\n",
+      "\nEntry point: ",
+      decomp[1],
+      "?\nParameters:\n",
       paste0("   - ", params, collapse = "\n"),
-      "\nurl: ", url
+      "\nurl: ",
+      url
     )
   }
 
@@ -99,7 +103,9 @@ arc_api_call <- function(url, destfile, quiet) {
 
   # nocov start
   if (isFALSE(dwn_res)) {
-    if (isFALSE(quiet)) message("\nRetrying query")
+    if (isFALSE(quiet)) {
+      message("\nRetrying query")
+    }
     Sys.sleep(1)
 
     dwn_res <-

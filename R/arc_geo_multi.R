@@ -1,8 +1,8 @@
 #' Geocoding using the ArcGIS REST API with multi-field query
 #'
 #' @description
-#' Geocodes addresses given specific address components.This function returns
-#' the [`tibble`][tibble::tibble] associated with the query.
+#' Geocodes addresses given specific address components. This function returns
+#' the [tibble][tibble::tbl_df] associated with the query.
 #'
 #' For geocoding using a single text string use [arc_geo()] function.
 #'
@@ -20,7 +20,7 @@
 #' ```{r child = "man/chunks/out1.Rmd"}
 #' ```
 #'
-#' The resulting output would include also the input parameters (columns with
+#' The resulting output will include also the input arguments (columns with
 #' prefix `q_`) for better tracking the results.
 #'
 #' @details
@@ -29,14 +29,14 @@
 #'
 #' # Address components
 #'
-#' This function allows to perform structured queries by different components of
+#' This function allows performing structured queries by different components of
 #' an address. At least one field should be different than `NA` or `NULL`.
 #'
-#' A vector of values can be provided for each parameter for multiple geocoding.
-#' When using vectors on different parameters, their lengths should be the
+#' A vector of values can be provided for each argument for multiple geocoding.
+#' When using vectors on different arguments, their lengths should be the
 #' same.
 #'
-#' The following list provides a brief description of each parameter:
+#' The following list provides a brief description of each argument:
 #'
 #' - `address`: A string that represents the first line of a street address. In
 #'    most cases it will be the **street name and house number** input, but it
@@ -82,8 +82,8 @@
 #'
 #' library(dplyr)
 #'
-#' simple %>%
-#'   select(lat, lon, CntryName, Region, LongLabel) %>%
+#' simple |>
+#'   select(lat, lon, CntryName, Region, LongLabel) |>
 #'   slice_head(n = 10)
 #'
 #' # Restrict search to Spain
@@ -93,8 +93,8 @@
 #'   custom_query = list(outFields = c("LongLabel", "CntryName", "Region"))
 #' )
 #'
-#' simple2 %>%
-#'   select(lat, lon, CntryName, Region, LongLabel) %>%
+#' simple2 |>
+#'   select(lat, lon, CntryName, Region, LongLabel) |>
 #'   slice_head(n = 10)
 #'
 #' # Restrict to a region
@@ -105,22 +105,45 @@
 #'   custom_query = list(outFields = c("LongLabel", "CntryName", "Region"))
 #' )
 #'
-#' simple3 %>%
-#'   select(lat, lon, CntryName, Region, LongLabel) %>%
+#' simple3 |>
+#'   select(lat, lon, CntryName, Region, LongLabel) |>
 #'   slice_head(n = 10)
 #' }
-arc_geo_multi <- function(address = NULL, address2 = NULL, address3 = NULL,
-                          neighborhood = NULL, city = NULL, subregion = NULL,
-                          region = NULL, postal = NULL, postalext = NULL,
-                          countrycode = NULL, lat = "lat", long = "lon",
-                          limit = 1, full_results = FALSE,
-                          return_addresses = TRUE, verbose = FALSE,
-                          progressbar = TRUE, outsr = NULL, langcode = NULL,
-                          category = NULL, custom_query = list()) {
+arc_geo_multi <- function(
+  address = NULL,
+  address2 = NULL,
+  address3 = NULL,
+  neighborhood = NULL,
+  city = NULL,
+  subregion = NULL,
+  region = NULL,
+  postal = NULL,
+  postalext = NULL,
+  countrycode = NULL,
+  lat = "lat",
+  long = "lon",
+  limit = 1,
+  full_results = FALSE,
+  return_addresses = TRUE,
+  verbose = FALSE,
+  progressbar = TRUE,
+  outsr = NULL,
+  langcode = NULL,
+  category = NULL,
+  custom_query = list()
+) {
   # Treat input multi
   init_df <- input_multi(
-    address, address2, address3, neighborhood, city,
-    subregion, region, postal, postalext, countrycode
+    address,
+    address2,
+    address3,
+    neighborhood,
+    city,
+    subregion,
+    region,
+    postal,
+    postalext,
+    countrycode
   )
 
   if (limit > 50) {
@@ -149,7 +172,7 @@ arc_geo_multi <- function(address = NULL, address2 = NULL, address3 = NULL,
   }
   seql <- seq(1, ntot, 1)
 
-  # Add additional parameters to the custom query
+  # Add additional arguments to the custom query
   if (isTRUE(full_results)) {
     # This will override the outFields param provided in the custom_query
     custom_query$outFields <- "*"
@@ -159,31 +182,47 @@ arc_geo_multi <- function(address = NULL, address2 = NULL, address3 = NULL,
   custom_query$langCode <- langcode
   custom_query$category <- category
 
-
   all_res <- lapply(seql, function(x) {
     ad <- key[x]
     if (progressbar) {
       setTxtProgressBar(pb, x)
     }
     arc_geo_single(
-      address = ad, lat, long, limit, full_results, return_addresses,
-      verbose, custom_query, singleline = FALSE
+      address = ad,
+      lat,
+      long,
+      limit,
+      full_results,
+      return_addresses,
+      verbose,
+      custom_query,
+      singleline = FALSE
     )
   })
-  if (progressbar) close(pb)
+  if (progressbar) {
+    close(pb)
+  }
 
   all_res <- dplyr::bind_rows(all_res)
   all_res <- dplyr::left_join(init_key, all_res, by = "query")
 
   all_res[all_res == ""] <- NA
-  return(all_res)
+  all_res
 }
 
 # Helpef fun
-input_multi <- function(address = NULL, address2 = NULL, address3 = NULL,
-                        neighborhood = NULL, city = NULL, subregion = NULL,
-                        region = NULL, postal = NULL, postalext = NULL,
-                        countrycode = NULL) {
+input_multi <- function(
+  address = NULL,
+  address2 = NULL,
+  address3 = NULL,
+  neighborhood = NULL,
+  city = NULL,
+  subregion = NULL,
+  region = NULL,
+  postal = NULL,
+  postalext = NULL,
+  countrycode = NULL
+) {
   multi_list <- list(
     address = address,
     address2 = address2,
@@ -196,7 +235,6 @@ input_multi <- function(address = NULL, address2 = NULL, address3 = NULL,
     postalExt = postalext,
     countryCode = countrycode
   )
-
 
   getlen <- lengths(multi_list)
   nolens <- getlen[getlen != 0]
@@ -224,7 +262,6 @@ input_multi <- function(address = NULL, address2 = NULL, address3 = NULL,
 
     qq
   })
-
 
   names(the_df) <- paste0("q_", tolower(names(the_df)))
 

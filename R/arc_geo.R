@@ -2,11 +2,11 @@
 #'
 #' @description
 #' Geocodes addresses given as character values. This function returns the
-#' [`tibble`][tibble::tibble] object associated with the query.
+#' [tibble][tibble::tbl_df] object associated with the query.
 #'
 #' This function uses the `SingleLine` approach detailed in the
 #' [ArcGIS REST docs](`r arcurl("cand")`). For multi-field queries (i.e.
-#' using specific address parameters) use [arc_geo_multi()] function.
+#' using specific address arguments) use [arc_geo_multi()] function.
 #'
 #' @param address character with single line address
 #'   (`"1600 Pennsylvania Ave NW, Washington"`) or a vector of addresses
@@ -17,10 +17,10 @@
 #'   that each query returns a maximum of 50 results.
 #' @param full_results returns all available data from the API service. This
 #'   is a shorthand of `outFields=*`. See **References**. If `FALSE` (default)
-#'   only the default values of the API would be returned. See also
+#'   only the default values of the API are returned. See also
 #'   `return_addresses` argument.
 #' @param return_addresses return input addresses with results if `TRUE`.
-#' @param sourcecountry Limits the candidates returned to the specified country
+#' @param sourcecountry limits the candidates returned to the specified country
 #'   or countries. Acceptable values include the three-character country code.
 #'   You can specify multiple country codes to limit results to more than one
 #'   country.
@@ -55,7 +55,7 @@
 #'   custom_query = list(outFields = c("LongLabel", "CntryName"))
 #' )
 #'
-#' with_params %>%
+#' with_params |>
 #'   select(lat, lon, CntryName, LongLabel)
 #'
 #' # With options: restrict search to USA
@@ -64,7 +64,7 @@
 #'   custom_query = list(outFields = c("LongLabel", "CntryName"))
 #' )
 #'
-#' with_params_usa %>%
+#' with_params_usa |>
 #'   select(lat, lon, CntryName, LongLabel)
 #' }
 #' @export
@@ -72,11 +72,21 @@
 #' @seealso [tidygeocoder::geo()]
 #' @family geocoding
 #'
-arc_geo <- function(address, lat = "lat", long = "lon", limit = 1,
-                    full_results = FALSE, return_addresses = TRUE,
-                    verbose = FALSE, progressbar = TRUE,
-                    outsr = NULL, langcode = NULL, sourcecountry = NULL,
-                    category = NULL, custom_query = list()) {
+arc_geo <- function(
+  address,
+  lat = "lat",
+  long = "lon",
+  limit = 1,
+  full_results = FALSE,
+  return_addresses = TRUE,
+  verbose = FALSE,
+  progressbar = TRUE,
+  outsr = NULL,
+  langcode = NULL,
+  sourcecountry = NULL,
+  category = NULL,
+  custom_query = list()
+) {
   if (limit > 50) {
     message(paste(
       "\nArcGIS REST API provides 50 results as a maximum. ",
@@ -98,7 +108,7 @@ arc_geo <- function(address, lat = "lat", long = "lon", limit = 1,
   }
   seql <- seq(1, ntot, 1)
 
-  # Add additional parameters to the custom query
+  # Add additional arguments to the custom query
   if (isTRUE(full_results)) {
     # This will override the outFields param provided in the custom_query
     custom_query$outFields <- "*"
@@ -109,19 +119,26 @@ arc_geo <- function(address, lat = "lat", long = "lon", limit = 1,
   custom_query$langCode <- langcode
   custom_query$category <- category
 
-
-
   all_res <- lapply(seql, function(x) {
     ad <- key[x]
     if (progressbar) {
       setTxtProgressBar(pb, x)
     }
     arc_geo_single(
-      address = ad, lat, long, limit, full_results, return_addresses,
-      verbose, custom_query, singleline = TRUE
+      address = ad,
+      lat,
+      long,
+      limit,
+      full_results,
+      return_addresses,
+      verbose,
+      custom_query,
+      singleline = TRUE
     )
   })
-  if (progressbar) close(pb)
+  if (progressbar) {
+    close(pb)
+  }
 
   all_res <- dplyr::bind_rows(all_res)
   all_res <- dplyr::left_join(init_key, all_res, by = "query")
@@ -131,11 +148,17 @@ arc_geo <- function(address, lat = "lat", long = "lon", limit = 1,
 }
 
 
-
-arc_geo_single <- function(address, lat = "lat", long = "lon", limit = 1,
-                           full_results = TRUE, return_addresses = TRUE,
-                           verbose = TRUE, custom_query = list(),
-                           singleline = TRUE) {
+arc_geo_single <- function(
+  address,
+  lat = "lat",
+  long = "lon",
+  limit = 1,
+  full_results = TRUE,
+  return_addresses = TRUE,
+  verbose = TRUE,
+  custom_query = list(),
+  singleline = TRUE
+) {
   # Step 1: Download ----
   api <- paste0(
     "https://geocode.arcgis.com/arcgis/rest/",
@@ -151,17 +174,14 @@ arc_geo_single <- function(address, lat = "lat", long = "lon", limit = 1,
 
   url <- paste0(api, ad_q, "&f=json&maxLocations=", limit)
 
-
   url <- add_custom_query(custom_query, url)
 
   # Download to temp file
   json <- tempfile(fileext = ".json")
   res <- arc_api_call(url, json, isFALSE(verbose))
 
-
   # Step 2: Read and parse results ----
   tbl_query <- dplyr::tibble(query = address)
-
 
   # nocov start
   if (isFALSE(res)) {
@@ -191,7 +211,10 @@ arc_geo_single <- function(address, lat = "lat", long = "lon", limit = 1,
   # Keep names in the right order
 
   result_out <- keep_names(
-    result_end, lat, long, full_results,
+    result_end,
+    lat,
+    long,
+    full_results,
     return_addresses
   )
 

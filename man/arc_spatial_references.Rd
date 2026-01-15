@@ -6,8 +6,8 @@
 \alias{arc_spatial_references}
 \title{ESRI (ArcGIS) Spatial Reference data base}
 \format{
-A \code{\link[tibble:tibble]{tibble}} with
-9,364 rows
+A \link[tibble:tbl_df-class]{tibble} with
+9,608 rows
 and fields:
 \describe{
 \item{projtype}{Projection type (\verb{"ProjectedCoordinateSystems", "GeographicCoordinateSystems","VerticalCoordinateSystems"})}
@@ -25,29 +25,30 @@ working with \CRANpkg{sf} or \CRANpkg{terra}}
 \href{https://github.com/Esri/projection-engine-db-doc}{ESRI Projection Engine factory}
 }
 \description{
-Database of available spatial references (CRS) in \code{\link[tibble:tibble]{tibble}}
+Database of available spatial references (CRS) in \link[tibble:tbl_df-class]{tibble}
 format.
 }
 \details{
-This data base is useful when using the \code{outsr} parameter of the functions.
+This data base is useful when using the \code{outsr} argument of the functions.
 
 Some projections ids have changed over time, for example Web Mercator is
 \code{wkid  = 102100} is deprecated and currently is \code{wkid = 3857}. However, both
 values would work, and they would return similar results.
 }
 \note{
-Data extracted on \strong{14 January 2023}.
+Data extracted on \strong{15 January 2026}.
 }
 \examples{
-\dontshow{if (arcgeocoder_check_access()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (arcgeocoder_check_access()) withAutoprint(\{ # examplesIf}
 \donttest{
-# Get all possible valuesdata("arc_spatial_references")
+# Get all possible values
+data("arc_spatial_references")
 arc_spatial_references
 
 # Request with deprecated Web Mercator
 library(dplyr)
-wkid <- arc_spatial_references \%>\%
-  filter(latestWkid == 3857 & deprecated == TRUE) \%>\%
+wkid <- arc_spatial_references |>
+  filter(latestWkid == 3857 & deprecated == TRUE) |>
   slice(1)
 
 glimpse(wkid)
@@ -55,8 +56,8 @@ glimpse(wkid)
 add <- arc_geo("London, United Kingdom", outsr = wkid$wkid)
 
 # Note values lat, lon and wkid. latestwkid give the current valid wkid
-add \%>\%
-  select(lat, lon, wkid, latestWkid) \%>\%
+add |>
+  select(lat, lon, wkid, latestWkid) |>
   glimpse()
 
 # See with sf

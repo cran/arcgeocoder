@@ -1,5 +1,5 @@
 ---
-title: "Get started wit arcgeocoder"
+title: "Get started with arcgeocoder"
 output: rmarkdown::html_vignette
 desc: >
   Quick examples showing what arcgeocoder can do for you.
@@ -11,10 +11,12 @@ bibliography: REFERENCES.bib
 link-citations: true
 ---
 
+<!-- arcgeocoder.Rmd is generated from arcgeocoder.Rmd.orig. Please edit that file -->
+
 
 
 The goal of **arcgeocoder** is to provide a light interface for geocoding
-addresses and reverse geocoding location trough the [ArcGIS REST API Geocoding
+addresses and reverse geocoding locations through the [ArcGIS REST API Geocoding
 Service](https://developers.arcgis.com/rest/geocode/api-reference/overview-world-geocoding-service.htm).
 
 Full site with examples and vignettes on
@@ -28,7 +30,7 @@ and reverse geocoding with the ArcGIS REST API service. The goal of
 as **curl** . In some situations, **curl** may not be available or accessible,
 so **arcgeocoder** uses base functions to overcome this limitation.
 
-The interface of **apigeocoder** is built with the aim of easing the access to
+The interface of **arcgeocoder** is built with the aim of easing the access to
 all the features provided by the API. The API endpoints used by **arcgeocoder**
 are `findAddressCandidates` and `reverseGeocode`, which can be accessed without
 the need for an API key.
@@ -36,7 +38,7 @@ the need for an API key.
 ## Recommended packages
 
 There are other packages much more complete and mature than `nominatimlite`,
-that presents similar features:
+that present similar features:
 
 -   [**tidygeocoder**](https://jessecambon.github.io/tidygeocoder/)
     [@R-tidygeocoder]. Allows to interface with ArcGIS, Nominatim
@@ -84,8 +86,8 @@ service.
 |query                                      | latitude|  longitude|address                                                           | score|          x|        y|       xmin|     ymin|       xmax|     ymax| wkid| latestWkid|
 |:------------------------------------------|--------:|----------:|:-----------------------------------------------------------------|-----:|----------:|--------:|----------:|--------:|----------:|--------:|----:|----------:|
 |1600 Pennsylvania Ave NW, Washington, DC   | 38.89768|  -77.03655|1600 Pennsylvania Ave NW, Washington, District of Columbia, 20500 |   100|  -77.03655| 38.89768|  -77.03755| 38.89668|  -77.03555| 38.89868| 4326|       4326|
-|600 Montgomery St, San Francisco, CA 94111 | 37.79519| -122.40279|600 Montgomery St, San Francisco, California, 94111               |   100| -122.40279| 37.79519| -122.40379| 37.79419| -122.40179| 37.79619| 4326|       4326|
-|233 S Wacker Dr, Chicago, IL 60606         | 41.87889|  -87.63602|233 S Wacker Dr, Chicago, Illinois, 60606                         |   100|  -87.63602| 41.87889|  -87.63702| 41.87789|  -87.63502| 41.87989| 4326|       4326|
+|600 Montgomery St, San Francisco, CA 94111 | 37.79516| -122.40273|600 Montgomery St, San Francisco, California, 94111               |   100| -122.40273| 37.79516| -122.40373| 37.79416| -122.40173| 37.79616| 4326|       4326|
+|233 S Wacker Dr, Chicago, IL 60606         | 41.87867|  -87.63587|233 S Wacker Dr, Chicago, Illinois, 60606                         |   100|  -87.63587| 41.87867|  -87.63687| 41.87767|  -87.63487| 41.87967| 4326|       4326|
 
 
 
@@ -107,11 +109,11 @@ reverse <- arc_reverse_geo(
 
 
 
-|          x|        y|address_found                                                                |
-|----------:|--------:|:----------------------------------------------------------------------------|
-|  -77.03655| 38.89768|White House, 1600 Pennsylvania Ave NW, Washington, DC, 20500, USA            |
-| -122.40279| 37.79519|Mbia Insurance Corporation, 600 Montgomery St, San Francisco, CA, 94111, USA |
-|  -87.63602| 41.87889|Liberty Hands Cleaning, 233 S Wacker Dr, Ste 1011, Chicago, IL, 60606, USA   |
+|          x|        y|address_found                                                     |
+|----------:|--------:|:-----------------------------------------------------------------|
+|  -77.03655| 38.89768|White House, 1600 Pennsylvania Ave NW, Washington, DC, 20500, USA |
+| -122.40273| 37.79516|Chess Ventures, 600 Montgomery St, San Francisco, CA, 94111, USA  |
+|  -87.63587| 41.87867|The Metropolitan, 233 South Wacker Drive, Chicago, IL, 60606, USA |
 
 
 
@@ -138,12 +140,12 @@ eiffel_tower <- arc_geo_multi(
 )
 
 # Display results
-eiffel_tower %>%
+eiffel_tower |>
   select(lon, lat, LongLabel)
 #> # A tibble: 1 × 3
-#>     lon   lat LongLabel                                                                           
-#>   <dbl> <dbl> <chr>                                                                               
-#> 1  2.29  48.9 Tour Eiffel, 3 Esplanade des Ouvriers de la Tour Eiffel, 75007, 7e Arrondissement, …
+#>     lon   lat LongLabel                                                                 
+#>   <dbl> <dbl> <chr>                                                                     
+#> 1  2.29  48.9 Tour Eiffel, 3 Rue de l'Université, 75007, 7e Arrondissement, Paris, Île-…
 
 
 # Use lon,lat to boots the search and using category = Food
@@ -153,7 +155,7 @@ food_eiffel <- arc_geo_categories("Food",
   limit = 50, full_results = TRUE
 )
 
-# Plot  by Food Type
+# Plot by Food Type
 ggplot(eiffel_tower, aes(x, y)) +
   geom_point(shape = 17, color = "red", size = 4) +
   geom_point(data = food_eiffel, aes(x, y, color = Type)) +
@@ -168,13 +170,5 @@ ggplot(eiffel_tower, aes(x, y)) +
 ```
 
 ![Example: Food places near the Eiffel Tower](./eiffel-1.png)
-
-### **arcgeocoder** and **r-spatial**
-
-See additional articles showing how **arcgeocoder** can be use in combination
-with **leaflet** to create [dynamic
-maps](https://dieghernan.github.io/arcgeocoder/articles/ex_leaflet.html) and
-with **sf** and **terra** to create [static
-maps](https://dieghernan.github.io/arcgeocoder/articles/ex_static.html).
 
 ## References

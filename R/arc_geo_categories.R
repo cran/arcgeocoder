@@ -8,9 +8,9 @@
 #' See [arc_categories] for a detailed explanation and available values.
 #'
 #' **Note that** for obtaining results it is needed:
-#' - Either to provide a pair of coordinates (`x,y` parameters) that would be
+#' - Either to provide a pair of coordinates (`x,y` arguments) that would be
 #'   used as a reference for geocoding.
-#' - Or a viewbox (aka bounding box) on the `bbox` parameter defining an
+#' - Or a viewbox (aka bounding box) on the `bbox` argument defining a
 #'   desired extent of the results.
 #'
 #'  It is possible to combine the two approaches (i.e. providing `x,y,bbox`
@@ -34,10 +34,9 @@
 #' Bounding boxes can be located using different online tools, as
 #' [Bounding Box Tool](https://boundingbox.klokantech.com/).
 #'
-#' For a full list of valid categories see [arc_categories].
-#'
-#' This function is vectorized over `category`, that means that it would perform
-#' one independent call to [arc_geo()] for each `category` value.
+#' For a full list of valid categories see [arc_categories]. This function is
+#' vectorized over `category`, that means that it performs one independent call
+#' to [arc_geo()] for each `category` value.
 #'
 #' `arc_geo_categories()` also understands a single string of categories
 #' separated by commas (`"Cinema,Museum"`), that would be internally treated as
@@ -92,9 +91,9 @@
 #' # Reduce number of labels to most common ones
 #' library(dplyr)
 #'
-#' labs <- ex1 %>%
-#'   count(ShortLabel) %>%
-#'   slice_max(n = 7, order_by = n) %>%
+#' labs <- ex1 |>
+#'   count(ShortLabel) |>
+#'   slice_max(n = 7, order_by = n) |>
 #'   pull(ShortLabel)
 #'
 #' base_map +
@@ -135,10 +134,20 @@
 #'     subtitle = "Search near with name and bbox"
 #'   )
 #' }
-arc_geo_categories <- function(category, x = NULL, y = NULL, bbox = NULL,
-                               name = NULL, lat = "lat", long = "lon",
-                               limit = 1, full_results = FALSE,
-                               verbose = FALSE, custom_query = list(), ...) {
+arc_geo_categories <- function(
+  category,
+  x = NULL,
+  y = NULL,
+  bbox = NULL,
+  name = NULL,
+  lat = "lat",
+  long = "lon",
+  limit = 1,
+  full_results = FALSE,
+  verbose = FALSE,
+  custom_query = list(),
+  ...
+) {
   # Prepare location
   locs <- validate_location(x, y)
 
@@ -146,7 +155,7 @@ arc_geo_categories <- function(category, x = NULL, y = NULL, bbox = NULL,
   bbox <- validate_bbox(bbox)
 
   if (all(is.na(c(locs, bbox)))) {
-    stop("Provide either a valid combination of x,y parameters or a valid bbox")
+    stop("Provide either a valid combination of x,y arguments or a valid bbox")
   }
 
   # Ready for preparing query
@@ -163,30 +172,38 @@ arc_geo_categories <- function(category, x = NULL, y = NULL, bbox = NULL,
     q_bbox_ymax = bbox[4]
   )
 
-
-  if (!any(is.na(locs))) {
+  if (!anyNA(locs)) {
     custom_query$location <- paste0(locs, collapse = ",")
   }
 
-  if (!any(is.na(bbox))) {
+  if (!anyNA(bbox)) {
     custom_query$searchExtent <- paste0(bbox, collapse = ",")
   }
 
-  if (is.null(name)) name <- ""
+  if (is.null(name)) {
+    name <- ""
+  }
 
   # Vectorize call over categories
   ncalls <- seq_len(nrow(base_tbl))
   api_res <- lapply(ncalls, function(x) {
     bs <- base_tbl[x, ]
     qry <- arc_geo(
-      category = bs$q_category, address = name,
-      lat = lat, long = long, limit = limit,
+      category = bs$q_category,
+      address = name,
+      lat = lat,
+      long = long,
+      limit = limit,
       full_results = full_results,
       return_addresses = TRUE,
-      verbose = verbose, progressbar = FALSE,
-      custom_query = custom_query, ...
+      verbose = verbose,
+      progressbar = FALSE,
+      custom_query = custom_query,
+      ...
     )
-    if (all(is.na(qry[, c(2, 3)]))) message("(category: ", bs$q_category, ")")
+    if (all(is.na(qry[, c(2, 3)]))) {
+      message("(category: ", bs$q_category, ")")
+    }
     end <- dplyr::bind_cols(bs, qry)
 
     # Remove fields
@@ -200,16 +217,20 @@ arc_geo_categories <- function(category, x = NULL, y = NULL, bbox = NULL,
 
 
 validate_location <- function(x = NULL, y = NULL) {
-  if (is.null(x)) x <- NA
-  if (is.null(y)) y <- NA
+  if (is.null(x)) {
+    x <- NA
+  }
+  if (is.null(y)) {
+    y <- NA
+  }
   # If both NAs then return NAs
   if (all(is.na(x), is.na(y))) {
     return(c(NA, NA))
   }
 
   # If any NA return NAs with message
-  if (any(is.na(x), is.na(y))) {
-    message("Either x or y are missing. `location` parameter won't be used")
+  if (anyNA(c(x, y))) {
+    message("Either x or y are missing. `location` argument won't be used")
     return(c(NA, NA))
   }
 
@@ -221,7 +242,6 @@ validate_location <- function(x = NULL, y = NULL) {
   # Not vectorized
   x <- x[1]
   y <- y[1]
-
 
   # Lat
   y_cap <- pmax(pmin(y, 90), -90)
@@ -246,18 +266,18 @@ validate_bbox <- function(bbox = NULL) {
   }
 
   # If any NA return NAs with message
-  if (any(is.na(bbox))) {
-    message("`bbox` with NA values. `bbox` parameter won't be used")
+  if (anyNA(bbox)) {
+    message("`bbox` with NA values. `bbox` argument won't be used")
     return(c(NA, NA, NA, NA))
   }
 
   if (length(bbox) < 4) {
-    message("`bbox` with less than 4 values. `bbox` parameter won't be used")
+    message("`bbox` with less than 4 values. `bbox` argument won't be used")
     return(c(NA, NA, NA, NA))
   }
 
   if (!is.numeric(bbox)) {
-    message("`bbox` not numeric. `bbox` parameter won't be used")
+    message("`bbox` not numeric. `bbox` argument won't be used")
     return(c(NA, NA, NA, NA))
   }
 
@@ -271,7 +291,6 @@ validate_bbox <- function(bbox = NULL) {
   if (!all(xs_cap == xs)) {
     message("\nbbox xmin,xmax have been restricted to [-180, 180]")
   }
-
 
   # Lat
   ys <- bbox[c(2, 4)]
