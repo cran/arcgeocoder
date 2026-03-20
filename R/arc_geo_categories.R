@@ -7,19 +7,20 @@
 #'
 #' See [arc_categories] for a detailed explanation and available values.
 #'
-#' **Note that** for obtaining results it is needed:
-#' - Either to provide a pair of coordinates (`x,y` arguments) that would be
-#'   used as a reference for geocoding.
-#' - Or a viewbox (aka bounding box) on the `bbox` argument defining a
-#'   desired extent of the results.
+#' **Note:** to obtain results, provide one of the following:
+#' - A pair of coordinates (`x,y` arguments) used as a reference for geocoding.
+#' - A viewbox (aka bounding box) via the `bbox` argument defining a desired
+#'   extent for results.
 #'
-#'  It is possible to combine the two approaches (i.e. providing `x,y,bbox`
-#'  values) in order to boost the geocoding process. See **Examples**.
+#' It is possible to combine both approaches (i.e. providing `x,y,bbox` values)
+#' to improve the geocoding process. See **Examples**.
 #'
 #' @param category A place or address type that can be used to filter results.
 #'   Several values can be used as well as a vector (i.e.
 #'   `c("Cinema", "Museum")`), performing one call for each value. See
 #'   **Details**.
+#' @param limit Maximum number of results per query. ArcGIS API limits a single
+#'   request to 50 results.
 #' @inheritParams arc_geo
 #' @inheritParams arc_reverse_geo
 #' @inheritDotParams arc_geo -address -return_addresses -progressbar
@@ -28,6 +29,7 @@
 #'   See **Details**.
 #' @param name Optionally, a string indicating the name or address of the
 #'   desired results.
+#' @param custom_query Additional API parameters as named list values.
 #'
 #' @details
 #'
@@ -35,13 +37,12 @@
 #' [Bounding Box Tool](https://boundingbox.klokantech.com/).
 #'
 #' For a full list of valid categories see [arc_categories]. This function is
-#' vectorized over `category`, that means that it performs one independent call
+#' vectorized over `category`, which means it performs one independent call
 #' to [arc_geo()] for each `category` value.
 #'
 #' `arc_geo_categories()` also understands a single string of categories
 #' separated by commas (`"Cinema,Museum"`), that would be internally treated as
 #' `c("Cinema", "Museum")`.
-#'
 #'
 #' @inheritSection arc_reverse_geo `outsr`
 #'
@@ -68,7 +69,6 @@
 #' # CRS
 #' carab_crs <- unique(carab$latestWkid)
 #'
-#'
 #' library(ggplot2)
 #'
 #' base_map <- ggplot(carab) +
@@ -79,14 +79,12 @@
 #'   ) +
 #'   coord_sf(crs = carab_crs)
 #'
-#'
 #' # Ex1: Search near Carabanchel (not restricted)
 #' ex1 <- arc_geo_categories("Gas Station",
 #'   # Location
 #'   x = carab$lon, y = carab$lat,
 #'   limit = 50, full_results = TRUE
 #' )
-#'
 #'
 #' # Reduce number of labels to most common ones
 #' library(dplyr)

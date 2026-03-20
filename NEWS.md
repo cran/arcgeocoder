@@ -1,3 +1,7 @@
+# arcgeocoder 0.4.0
+
+-   Migrate docs to Quarto (#24).
+
 # arcgeocoder 0.3.0
 
 -   Minimum **R** version now is `4.1.0`.
