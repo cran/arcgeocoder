@@ -5,12 +5,9 @@ test_that("Errors", {
 
   expect_error(
     arc_reverse_geo(0, c(2, 3)),
-    "x and y should have the same number"
+    "`x` and `y` must have the same number"
   )
-  expect_error(
-    arc_reverse_geo("a", "a"),
-    "must be numeric"
-  )
+  expect_error(arc_reverse_geo("a", "a"), "must be numeric")
 })
 
 test_that("Messages", {
@@ -20,11 +17,11 @@ test_that("Messages", {
 
   expect_message(
     out <- arc_reverse_geo(200, 0),
-    "longitudes have been restricted"
+    "Longitudes have been restricted"
   )
   expect_message(
     out <- arc_reverse_geo(0, 200),
-    "latitudes have been restricted"
+    "Latitudes have been restricted"
   )
 
   expect_snapshot(out <- arc_reverse_geo(0, 90, verbose = TRUE))
@@ -36,7 +33,7 @@ test_that("Returning empty query", {
 
   expect_message(
     obj <- arc_reverse_geo(179.9999, 89.999999, featuretypes = "StreetInt"),
-    "No results for location="
+    "No results for location:"
   )
 
   expect_true(nrow(obj) == 1)
@@ -53,7 +50,7 @@ test_that("Returning empty query", {
       address = "adddata",
       featuretypes = "StreetInt"
     ),
-    "No results for location="
+    "No results for location:"
   )
 
   expect_identical(names(obj_renamed), c("x", "y", "adddata"))
@@ -209,4 +206,34 @@ test_that("Progress bar", {
 
   # Not
   expect_silent(aa <- arc_reverse_geo(long, lat, progressbar = FALSE))
+})
+
+test_that("Mock arc_api_call", {
+  skip_on_cran()
+  skip_if_api_server()
+
+  my_fn <- arc_api_call
+  local_mocked_bindings(
+    arc_api_call = function(...) {
+      FALSE
+    }
+  )
+
+  expect_message(
+    obj <- arc_reverse_geo(-3.6687109, 40.4207414),
+    "is not reachable"
+  )
+
+  expect_identical(
+    obj,
+    tibble::tibble(x = -3.6687109, y = 40.4207414, address = NA_character_)
+  )
+  expect_true(anyNA(obj))
+
+  # Restore mocked binding.
+  local_mocked_bindings(arc_api_call = my_fn)
+
+  expect_identical(my_fn, arc_api_call)
+  expect_silent(obj <- arc_reverse_geo(-3.6687109, 40.4207414))
+  expect_false(anyNA(obj))
 })

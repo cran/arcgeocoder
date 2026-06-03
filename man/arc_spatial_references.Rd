@@ -4,36 +4,37 @@
 \encoding{UTF-8}
 \name{arc_spatial_references}
 \alias{arc_spatial_references}
-\title{ESRI (ArcGIS) Spatial Reference data base}
+\title{Esri (ArcGIS) spatial reference data}
 \format{
-A \link[tibble:tbl_df-class]{tibble} with
+A \link[tibble:tbl_df]{tibble} with
 9,608 rows
 and fields:
 \describe{
-\item{projtype}{Projection type (\verb{"ProjectedCoordinateSystems", "GeographicCoordinateSystems","VerticalCoordinateSystems"})}
-\item{wkid}{Well-Known ID}
-\item{latestWkid}{Most recent \code{wkid}, in case that \code{wkid} is deprecated}
-\item{authority}{\code{wkid} authority (Esri or EPSG)}
-\item{deprecated}{Logical indicating if \code{wkid} is deprecated}
-\item{description}{Human-readable description of the \code{wkid}}
-\item{areaname}{Use area of the \code{wkid}}
+\item{projtype}{Projection type (\code{"ProjectedCoordinateSystems"},
+\code{"GeographicCoordinateSystems"} or \code{"VerticalCoordinateSystems"}).}
+\item{wkid}{Well-Known ID.}
+\item{latestWkid}{Most recent \code{wkid}, if \code{wkid} is deprecated.}
+\item{authority}{\code{wkid} authority (Esri or EPSG).}
+\item{deprecated}{Logical indicating whether \code{wkid} is deprecated.}
+\item{description}{Human-readable description of the \code{wkid}.}
+\item{areaname}{Use area of the \code{wkid}.}
 \item{wkt}{Representation of \code{wkid} in Well-Known Text (WKT). Useful when
-working with \CRANpkg{sf} or \CRANpkg{terra}}
+working with \CRANpkg{sf} or \CRANpkg{terra}.}
 }
 }
 \source{
-\href{https://github.com/Esri/projection-engine-db-doc}{ESRI Projection Engine factory}
+\href{https://github.com/Esri/projection-engine-db-doc}{Esri Projection Engine factory}
 }
 \description{
-Database of available spatial references (CRS) in \link[tibble:tbl_df-class]{tibble}
+Dataset of available spatial references (CRS) in \link[tibble:tbl_df]{tibble}
 format.
 }
 \details{
-This data base is useful when using the \code{outsr} argument of the functions.
+This dataset is useful when using the \code{outsr} argument.
 
-Some projections ids have changed over time, for example Web Mercator is
-\code{wkid  = 102100} is deprecated and currently is \code{wkid = 3857}. However, both
-values would work, and they would return similar results.
+Some projection IDs have changed over time. For example, Web Mercator
+\code{wkid = 102100} is deprecated and is currently \code{wkid = 3857}. However, both
+values work and return similar results.
 }
 \note{
 Data extracted on \strong{15 January 2026}.
@@ -41,33 +42,34 @@ Data extracted on \strong{15 January 2026}.
 \examples{
 \dontshow{if (arcgeocoder_check_access()) withAutoprint(\{ # examplesIf}
 \donttest{
-# Get all possible values
+# Get all possible values.
 data("arc_spatial_references")
 arc_spatial_references
 
-# Request with deprecated Web Mercator
+# Request with deprecated Web Mercator.
 library(dplyr)
 wkid <- arc_spatial_references |>
-  filter(latestWkid == 3857 & deprecated == TRUE) |>
+  filter(latestWkid == 3857 & deprecated) |>
   slice(1)
 
 glimpse(wkid)
 
 add <- arc_geo("London, United Kingdom", outsr = wkid$wkid)
 
-# Note values lat, lon and wkid. latestwkid give the current valid wkid
+# Note values for `lat`, `lon` and `wkid`. `latestWkid` gives the current
+# valid `wkid`.
 add |>
   select(lat, lon, wkid, latestWkid) |>
   glimpse()
 
-# See with sf
+# Try with `sf`.
 
 try(sf::st_crs(wkid$wkid))
 
-# But
+# Try the latest WKID.
 try(sf::st_crs(wkid$latestWkid))
 
-# or
+# Or use WKT.
 try(sf::st_crs(wkid$wkt))
 }
 \dontshow{\}) # examplesIf}
@@ -75,7 +77,7 @@ try(sf::st_crs(wkid$wkt))
 \seealso{
 \code{\link[sf:st_crs]{sf::st_crs()}}
 
-Other datasets: 
+Other datasets:
 \code{\link{arc_categories}}
 }
 \concept{datasets}
